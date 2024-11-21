@@ -1,0 +1,39 @@
+name: Build and Extract APK
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Install unzip
+      run: sudo apt-get install unzip
+
+    - name: Create destination directory
+      run: mkdir -p path/to/destination
+
+    - name: Extract ZIP file
+      run: unzip Sngine.zip -d path/to/destination
+
+    - name: Set up JDK
+      uses: actions/setup-java@v1
+      with:
+        java-version: '11'
+
+    - name: Install Flutter
+      uses: subosito/flutter-action@v1
+      with:
+        flutter-version: '2.0.6'
+
+    - name: Build APK
+      run: cd path/to/destination && flutter build apk --release
+
+    - name: Upload APK
+      uses: actions/upload-artifact@v2
+      with:
+        name: apk
+        path: path/to/destination/build/app/outputs/flutter-apk/app-release.apk
